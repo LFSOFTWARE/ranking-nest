@@ -8,5 +8,6 @@ import { jogadoresProviders } from './jogadores.provider';
   imports: [DatabaseModule],
   controllers: [JogadoresController],
   providers: [JogadoresService, ...jogadoresProviders],
+  exports: [JogadoresService],
 })
 export class JogadoresModule {}
