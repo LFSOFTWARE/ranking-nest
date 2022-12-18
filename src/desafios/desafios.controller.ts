@@ -1,3 +1,5 @@
+import { UsePipes } from '@nestjs/common/decorators';
+import { ValidationPipe } from '@nestjs/common/pipes';
 import {
   Controller,
   Get,
@@ -11,11 +13,12 @@ import { DesafiosService } from './desafios.service';
 import { CreateDesafioDto } from './dto/create-desafio.dto';
 import { UpdateDesafioDto } from './dto/update-desafio.dto';
 
-@Controller('desafios')
+@Controller('api/v1/desafios')
 export class DesafiosController {
   constructor(private readonly desafiosService: DesafiosService) {}
 
   @Post()
+  @UsePipes(ValidationPipe)
   create(@Body() createDesafioDto: CreateDesafioDto) {
     return this.desafiosService.create(createDesafioDto);
   }

@@ -87,6 +87,18 @@ export class CategoriasService {
     );
   }
 
+  async findCategoryByIdJogador(id: any): Promise<any> {
+    const jogadorHasCategory = await this.categoriaModel
+      .find()
+      .where('jogadores')
+      .in(id);
+    if (jogadorHasCategory.length === 0) {
+      throw new NotFoundException(
+        `Jogador nao cadastrado ${id}  em nenhuma categoria`,
+      );
+    }
+    return jogadorHasCategory;
+  }
   remove(id: number) {
     return `This action removes a #${id} categoria`;
   }

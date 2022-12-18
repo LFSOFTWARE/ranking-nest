@@ -1,15 +1,22 @@
-import { Categoria } from 'src/categorias/interface/categoria.interface';
+import {
+  IsDateString,
+  IsNotEmpty,
+  IsArray,
+  ArrayMinSize,
+  ArrayMaxSize,
+} from 'class-validator';
+
 import { Jogador } from 'src/jogadores/interfaces/jogadores.interface';
-import { DesafiosStaus } from '../enum/dafios-status.enum';
-import { Partida } from '../interface/dasafios.interface';
 
 export class CreateDesafioDto {
+  @IsNotEmpty()
+  @IsDateString()
   dataHoraDesafio: Date;
-  status: DesafiosStaus;
-  dataHoraSolicitacao: Date;
-  dataHoraResposta: Date;
+
+  @IsNotEmpty()
   solicitante: Jogador;
-  categoria: Categoria;
+  @IsArray()
+  @ArrayMinSize(2)
+  @ArrayMaxSize(2)
   jogadores: Array<Jogador>;
-  partida: Partida;
 }
