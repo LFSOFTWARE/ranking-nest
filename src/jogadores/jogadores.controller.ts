@@ -12,7 +12,7 @@ import {
 import { JogadoresService } from './jogadores.service';
 import { CreateJogadoreDto } from './dto/create-jogadore.dto';
 import { Jogador } from './interfaces/jogadores.interface';
-import { InvalidParams } from 'src/common/invalid-params.pipe';
+import { InvalidParams } from 'src/common/pipes/invalid-params.pipe';
 import { UpdateJogadoreDto } from './dto/update-jogadore.dto';
 
 @Controller('api/v1/jogadores')
