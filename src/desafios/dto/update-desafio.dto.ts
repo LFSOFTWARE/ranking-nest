@@ -1,4 +1,8 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateDesafioDto } from './create-desafio.dto';
+import { Jogador } from 'src/jogadores/interfaces/jogadores.interface';
+import { DesafiosStaus } from './../enum/dafios-status.enum';
 
-export class UpdateDesafioDto extends PartialType(CreateDesafioDto) {}
+export class UpdateDesafioDto {
+  dataHoraDesafio: Date;
+  jogadores: Array<Jogador>;
+  status: DesafiosStaus;
+}

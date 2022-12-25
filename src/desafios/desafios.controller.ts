@@ -1,4 +1,4 @@
-import { UsePipes } from '@nestjs/common/decorators';
+import { Put, Query, UsePipes } from '@nestjs/common/decorators';
 import { ValidationPipe } from '@nestjs/common/pipes';
 import {
   Controller,
@@ -19,27 +19,35 @@ export class DesafiosController {
 
   @Post()
   @UsePipes(ValidationPipe)
-  create(@Body() createDesafioDto: CreateDesafioDto) {
-    return this.desafiosService.create(createDesafioDto);
+  async create(@Body() createDesafioDto: CreateDesafioDto) {
+    return await this.desafiosService.create(createDesafioDto);
   }
 
-  @Get()
-  findAll() {
-    return this.desafiosService.findAll();
+  @Get('')
+  async findOne(@Query('id') id: string) {
+    if (id) {
+      return await this.desafiosService.findOne(id);
+    }
+    return await this.desafiosService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.desafiosService.findOne(+id);
+  @Get('/jogador/:playerID')
+  async consultarDesafiosDeUmJogador(
+    @Param('playerID') playerID: string,
+  ): Promise<any> {
+    return await this.desafiosService.consultarDesafiosDeUmJogador(playerID);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDesafioDto: UpdateDesafioDto) {
-    return this.desafiosService.update(+id, updateDesafioDto);
+  @Put(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateDesafioDto: UpdateDesafioDto,
+  ) {
+    return await this.desafiosService.update(id, updateDesafioDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.desafiosService.remove(+id);
+    return this.desafiosService.remove(id);
   }
 }

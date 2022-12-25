@@ -4,7 +4,10 @@ import { CreateDesafioDto } from './dto/create-desafio.dto';
 import { UpdateDesafioDto } from './dto/update-desafio.dto';
 import { Desafios } from './interface/dasafios.interface';
 import { JogadoresService } from 'src/jogadores/jogadores.service';
-import { BadRequestException } from '@nestjs/common/exceptions';
+import {
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common/exceptions';
 import { CategoriasService } from 'src/categorias/categorias.service';
 import { DesafiosStaus } from './enum/dafios-status.enum';
 
@@ -56,19 +59,56 @@ export class DesafiosService {
     desafioNew.save();
   }
 
-  findAll() {
-    return `This action returns all desafios`;
+  async findAll(): Promise<Array<Desafios>> {
+    return await this.desafiosModel
+      .find()
+      .populate('jogadores')
+      .populate('solicitante')
+      .populate('categoria')
+      .populate('partida');
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} desafio`;
+  async findOne(id: string): Promise<Desafios> {
+    return await this.desafiosModel.findById({ _id: id });
   }
 
-  update(id: number, updateDesafioDto: UpdateDesafioDto) {
-    return `This action updates a #${id} desafio`;
+  async consultarDesafiosDeUmJogador(playerID: string) {
+    return await this.desafiosModel
+      .find()
+      .where('jogadores')
+      .in(playerID as unknown as any);
+  }
+  async update(id: string, updateDesafioDto: UpdateDesafioDto) {
+    const { status } = updateDesafioDto;
+    const aceptStatus = ['ACEITO', 'NEGADO', 'CANCELADO'];
+
+    const chalangeFind = this.desafiosModel.findOne({ _id: id });
+
+    if (!chalangeFind) {
+      throw new NotFoundException(`Desafio ${id} not found`);
+    }
+
+    const statusIsValid = aceptStatus.find((s) => s === status);
+
+    if (!statusIsValid && status !== undefined) {
+      throw new BadRequestException(`Status ${status} is not avalabre`);
+    }
+    await this.desafiosModel.findOneAndUpdate(
+      { _id: id },
+      { $set: updateDesafioDto },
+    );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} desafio`;
+  async remove(id: string) {
+    const chalangeFind = this.desafiosModel.findOne({ _id: id });
+
+    if (!chalangeFind) {
+      throw new NotFoundException(`Desafio ${id} not found`);
+    }
+
+    await this.desafiosModel.findOneAndUpdate(
+      { _id: id },
+      { $set: { status: 'CANCELADO' } },
+    );
   }
 }
