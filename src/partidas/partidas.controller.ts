@@ -1,9 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { PartidasService } from './partidas.service';
 import { CreatePartidaDto } from './dto/create-partida.dto';
 import { UpdatePartidaDto } from './dto/update-partida.dto';
 
-@Controller('partidas')
+@Controller('api/v1/partidas')
 export class PartidasController {
   constructor(private readonly partidasService: PartidasService) {}
 

@@ -1,3 +1,4 @@
+import { PartidasModule } from './../partidas/partidas.module';
 import { Module } from '@nestjs/common';
 import { DesafiosService } from './desafios.service';
 import { DesafiosController } from './desafios.controller';
@@ -7,7 +8,7 @@ import { JogadoresModule } from 'src/jogadores/jogadores.module';
 import { CategoriasModule } from 'src/categorias/categorias.module';
 
 @Module({
-  imports: [DatabaseModule, JogadoresModule, CategoriasModule],
+  imports: [DatabaseModule, JogadoresModule, CategoriasModule, PartidasModule],
   controllers: [DesafiosController],
   providers: [DesafiosService, ...desafiosProviders],
 })

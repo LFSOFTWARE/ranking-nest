@@ -1,4 +1,4 @@
-import { Jogador } from 'src/jogadores/interfaces/jogadores.interface';
+import { Jogador } from 'src/jogadores/schema/jogadore.schema';
 import { DesafiosStaus } from './../enum/dafios-status.enum';
 
 export class UpdateDesafioDto {

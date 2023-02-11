@@ -1,20 +1,22 @@
 import { Model } from 'mongoose';
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, BadRequestException } from '@nestjs/common';
 import { CreateDesafioDto } from './dto/create-desafio.dto';
 import { UpdateDesafioDto } from './dto/update-desafio.dto';
-import { Desafios } from './interface/dasafios.interface';
+import { Desafios, Partida } from './interface/dasafios.interface';
 import { JogadoresService } from 'src/jogadores/jogadores.service';
 import {
-  BadRequestException,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common/exceptions';
 import { CategoriasService } from 'src/categorias/categorias.service';
 import { DesafiosStaus } from './enum/dafios-status.enum';
+import { AtribuirDesafioPartidaDto } from './dto/atribuir-partida';
 
 @Injectable()
 export class DesafiosService {
   constructor(
     @Inject('DESAFIOS_MODEL') private desafiosModel: Model<Desafios>,
+    @Inject('PARTIDA_MODEL') private partidaModel: Model<Partida>,
     private jogadoresService: JogadoresService,
     private categoriasService: CategoriasService,
   ) {}
@@ -110,5 +112,49 @@ export class DesafiosService {
       { _id: id },
       { $set: { status: 'CANCELADO' } },
     );
+  }
+
+  async atribuirDesafioPartida(
+    id: string,
+    atribuirPartidaDto: AtribuirDesafioPartidaDto,
+  ) {
+    const { def } = atribuirPartidaDto;
+
+    const findChallange = await this.desafiosModel.findById({ _id: id });
+
+    if (!findChallange) {
+      throw new NotFoundException(`Desafio ${id} not found`);
+    }
+
+    const vencedorIsParticipante = findChallange.jogadores.find(
+      (jogador) => jogador == def,
+    );
+
+    if (!vencedorIsParticipante) {
+      throw new BadRequestException(
+        `Usuario vencedor ${def} nao faz parte do jogo `,
+      );
+    }
+
+    const newPartida = new this.partidaModel(atribuirPartidaDto);
+
+    newPartida.categoria = findChallange.categoria;
+    newPartida.jogadores = findChallange.jogadores;
+    const resultado = await newPartida.save();
+
+    findChallange.status = DesafiosStaus.REALIZADO;
+    findChallange.partida = resultado._id;
+
+    try {
+      this.desafiosModel.findByIdAndUpdate(
+        { _id: id },
+        {
+          $set: findChallange,
+        },
+      );
+    } catch (error) {
+      this.partidaModel.findByIdAndDelete({ _id: resultado._id });
+      throw new InternalServerErrorException();
+    }
   }
 }

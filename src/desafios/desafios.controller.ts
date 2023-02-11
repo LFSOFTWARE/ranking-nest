@@ -1,3 +1,4 @@
+import { AtribuirDesafioPartidaDto } from './dto/atribuir-partida';
 import { Put, Query, UsePipes } from '@nestjs/common/decorators';
 import { ValidationPipe } from '@nestjs/common/pipes';
 import {
@@ -49,5 +50,17 @@ export class DesafiosController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.desafiosService.remove(id);
+  }
+
+  @Post('/atribuir/:id')
+  @UsePipes(ValidationPipe)
+  async atribuirDesafioPartida(
+    @Param('id') id: string,
+    @Body() partidasDesafio: AtribuirDesafioPartidaDto,
+  ) {
+    return await this.desafiosService.atribuirDesafioPartida(
+      id,
+      partidasDesafio,
+    );
   }
 }

@@ -11,9 +11,10 @@ import {
 } from '@nestjs/common';
 import { JogadoresService } from './jogadores.service';
 import { CreateJogadoreDto } from './dto/create-jogadore.dto';
-import { Jogador } from './interfaces/jogadores.interface';
-import { InvalidParams } from 'src/common/pipes/invalid-params.pipe';
+
+// import { InvalidParams } from 'src/common/pipes/invalid-params.pipe';
 import { UpdateJogadoreDto } from './dto/update-jogadore.dto';
+import { Jogador } from './schema/jogadore.schema';
 
 @Controller('api/v1/jogadores')
 export class JogadoresController {
@@ -30,8 +31,8 @@ export class JogadoresController {
   async atualizarJogador(
     @Body() updateJogadoreDto: UpdateJogadoreDto,
     @Param('id') id: string,
-  ): Promise<void> {
-    await this.jogadoresService.update(updateJogadoreDto, id);
+  ): Promise<Jogador> {
+    return await this.jogadoresService.update(updateJogadoreDto, id);
   }
 
   @Get()
@@ -40,7 +41,7 @@ export class JogadoresController {
   }
 
   @Get('/:id')
-  async findById(@Param('id', InvalidParams) id: string): Promise<Jogador> {
+  async findById(@Param('id') id: string): Promise<Jogador> {
     return this.jogadoresService.findById(id);
   }
 

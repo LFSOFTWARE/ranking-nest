@@ -5,8 +5,7 @@ import {
   ArrayMinSize,
   ArrayMaxSize,
 } from 'class-validator';
-
-import { Jogador } from 'src/jogadores/interfaces/jogadores.interface';
+import { Jogador } from 'src/jogadores/schema/jogadore.schema';
 
 export class CreateDesafioDto {
   @IsNotEmpty()

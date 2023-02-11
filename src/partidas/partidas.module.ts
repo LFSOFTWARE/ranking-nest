@@ -8,5 +8,6 @@ import { partidasProviders } from './partidas.providers';
   imports: [DatabaseModule],
   controllers: [PartidasController],
   providers: [PartidasService, ...partidasProviders],
+  exports: [PartidasService],
 })
 export class PartidasModule {}

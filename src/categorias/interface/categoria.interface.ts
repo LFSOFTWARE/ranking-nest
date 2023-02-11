@@ -1,5 +1,5 @@
 import { Document } from 'mongoose';
-import { Jogador } from 'src/jogadores/interfaces/jogadores.interface';
+import { Jogador } from 'src/jogadores/schema/jogadore.schema';
 
 export interface Categoria extends Document {
   readonly Categoria: string;

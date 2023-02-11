@@ -1,4 +1,8 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreatePartidaDto } from './create-partida.dto';
+import { IsNotEmpty } from 'class-validator';
 
-export class UpdatePartidaDto extends PartialType(CreatePartidaDto) {}
+export class UpdatePartidaDto {
+  @IsNotEmpty()
+  readonly phoneNumber: string;
+  @IsNotEmpty()
+  name: string;
+}
